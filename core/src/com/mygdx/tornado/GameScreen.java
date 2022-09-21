@@ -40,6 +40,7 @@ public class GameScreen implements Screen {
     Array<TornadoDrop> tornadoes;
     long lastDropTime;
     int dropsGathered;
+    int lives = 5;
 
     public GameScreen(final Tornado game) {
         this.game = game;
@@ -160,14 +161,19 @@ public class GameScreen implements Screen {
             TornadoDrop tornadoDrop = iter.next();
             tornadoDrop.rectangle.y -= 400 * Gdx.graphics.getDeltaTime();
             if (tornadoDrop.rectangle.y + 32 < 0) {
+                lives--;
                 iter.remove();
+            }
+            if(lives==0){
+                game.setScreen(new BadEndingScreen(game));
+                dispose();
             }
             if (tornadoDrop.rectangle.overlaps(dima)) {
                 dropsGathered+=tornadoDrop.coin;
                 dropSound.play();
                 iter.remove();
             }
-            if (dropsGathered >= 5){
+            if (dropsGathered >= 50){
                 game.setScreen(new GoodEndingScreen(game));
                 dispose();
             }
